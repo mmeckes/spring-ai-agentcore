@@ -4,7 +4,8 @@ This example demonstrates how to use the AgentCore Evaluations module to automat
 
 ## Features
 
-- Automatic evaluation of chat responses using `Builtin.Helpfulness` evaluator
+- Automatic evaluation of chat responses using multiple built-in evaluators
+  (`Builtin.Helpfulness`, `Builtin.Correctness`, `Builtin.Coherence`)
 - Evaluation results returned in API response
 - Micrometer metrics exposed via Prometheus endpoint
 
@@ -31,18 +32,15 @@ curl -X POST http://localhost:8080/chat \
   -d '{"message": "What is the capital of France?"}'
 ```
 
-Response includes evaluation results:
+Response includes evaluation results from all configured evaluators:
 
 ```json
 {
-  "content": "The capital of France is Paris...",
+  "content": "The capital of France is Paris.",
   "evaluations": [
-    {
-      "evaluatorId": "Builtin.Helpfulness",
-      "score": 0.95,
-      "label": "helpful",
-      "explanation": "The response directly answers the question..."
-    }
+    { "evaluatorId": "Builtin.Helpfulness", "score": 0.83, "label": "Very Helpful",       "explanation": "..." },
+    { "evaluatorId": "Builtin.Correctness", "score": 1.0,  "label": "Perfectly Correct",  "explanation": "..." },
+    { "evaluatorId": "Builtin.Coherence",   "score": 1.0,  "label": "Completely Yes",     "explanation": "..." }
   ]
 }
 ```
@@ -63,9 +61,11 @@ Available metrics:
 
 ## Configuration
 
+Defaults below are the module defaults; see `src/main/resources/application.properties` for what this example overrides (notably `evaluator-ids` is set to three evaluators and `async` to `false`).
+
 | Property | Description | Default |
 |----------|-------------|---------|
-| `spring.ai.agentcore.evaluations.enabled` | Enable evaluations | `true` |
+| `spring.ai.agentcore.evaluations.enabled` | Enable evaluations | `false` |
 | `spring.ai.agentcore.evaluations.evaluator-ids` | Evaluators to use | `Builtin.Helpfulness` |
 | `spring.ai.agentcore.evaluations.async` | Run async | `true` |
 | `spring.ai.agentcore.evaluations.sample-rate` | Sampling rate (0.0-1.0) | `1.0` |
