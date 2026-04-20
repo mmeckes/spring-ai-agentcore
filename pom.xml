@@ -17,6 +17,7 @@
         <module>spring-ai-agentcore-memory</module>
         <module>spring-ai-agentcore-code-interpreter</module>
         <module>spring-ai-agentcore-browser</module>
+        <module>spring-ai-agentcore-evaluations</module>
     </modules>
 
     <scm>
